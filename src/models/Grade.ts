@@ -10,6 +10,7 @@ const gradeSchema = new Schema<Igrade>({
     subject: {
         type: String,
         required: [true, "Subject Title"],
+        unique: true 
     },
     score: {
         type: Number,
