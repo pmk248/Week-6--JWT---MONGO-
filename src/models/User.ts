@@ -29,14 +29,14 @@ const userSchema = new Schema<Iuser>({
         enum    : ["Teacher", "Student"]
     },
     classroom: {
-        type   : Schema.Types.ObjectId,
-        ref    : "Classroom",
-        default: null
+        type    : Schema.Types.ObjectId,
+        ref     : "Classroom",
+        default : null
     },
     grades: {
-        type   : [Schema.Types.ObjectId],
-        ref    : "Grade",
-        default: []
+        type    : [Schema.Types.ObjectId],
+        ref     : "Grade",
+        default : []
     }
 }, { timestamps: true })
 

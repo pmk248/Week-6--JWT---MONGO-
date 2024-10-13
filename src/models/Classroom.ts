@@ -2,8 +2,8 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export default interface Iclassroom extends Document {
   classroomName: string;
-  teacher: mongoose.Types.ObjectId; // Link to a teacher (User model)
-  students: mongoose.Types.ObjectId[]; // Array of students
+  teacher: mongoose.Types.ObjectId; 
+  students: mongoose.Types.ObjectId[]; 
 }
 
 const classroomSchema = new Schema<Iclassroom>({
@@ -14,12 +14,12 @@ const classroomSchema = new Schema<Iclassroom>({
   },
   teacher: {
     type: Schema.Types.ObjectId,
-    ref: "User", // References a teacher from the User model
+    ref: "User", 
     required: true,
   },
   students: [{
     type: Schema.Types.ObjectId,
-    ref: "User", // Array of students, each referencing a User model
+    ref: "User", 
   }],
 }, { timestamps: true });
 

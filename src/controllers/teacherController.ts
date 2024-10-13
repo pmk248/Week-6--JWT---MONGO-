@@ -6,22 +6,21 @@ import mongoose from "mongoose";
 
 export const addGrade = async (req: Request, res: Response) => {
     try {
-      const { subject, score, username } = req.body;
-  
-      // Find the student by username:
-      const student = await User.findOne({ username });
-      if (!student) {
-      res.status(404).json({ message: "Student not found" });
-      return;
-    }
+        const { subject, score, username } = req.body;
 
-    // Create a new grade:
-    const grade = new Grade({ subject: subject, score, student: student._id });
-    console.log({grade})
-    await grade.save();
-  
-    // Update the student to include the grade:
-    await User.findByIdAndUpdate(student._id, { $push: { grades: grade._id } });
+        // Find the student by username:
+        const student = await User.findOne({ username });
+        if (!student) {
+            res.status(404).json({ message: "Student not found" });
+            return;
+        }
+        // Create a new grade:
+        const grade = new Grade({ subject: subject, score, student: student._id });
+        console.log({grade})
+        await grade.save();
+    
+        // Update the student to include the grade:
+        await User.findByIdAndUpdate(student._id, { $push: { grades: grade._id } });
   
     res.status(201).json({ message: "Grade added successfully", grade });
     } catch (err) {

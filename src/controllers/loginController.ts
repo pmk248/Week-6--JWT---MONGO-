@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { User } from "../models/User";
 import jwt from "jsonwebtoken";
+import env from "dotenv"
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
