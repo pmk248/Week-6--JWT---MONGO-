@@ -85,3 +85,12 @@ export const deleteGrade = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error deleting grade", error: error.message });
     }
 } 
+
+export const getClassAverage = async (req: Request, res: Response) => {
+    try {
+        const { username } = req.body;
+    } catch(err) {
+        const error = err as Error
+        res.status(500).json({ message: "Error fetching grade averages", error: error.message });
+    }
+}
