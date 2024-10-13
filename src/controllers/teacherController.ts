@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { User } from "../models/User"; 
 import { Grade } from "../models/Grade"; 
+import { Classroom } from "../models/Classroom";
 import mongoose from "mongoose";
 
 export const addGrade = async (req: Request, res: Response) => {
@@ -88,9 +89,32 @@ export const deleteGrade = async (req: Request, res: Response) => {
 
 export const getClassAverage = async (req: Request, res: Response) => {
     try {
-        const { username } = req.body;
-    } catch(err) {
-        const error = err as Error
+        const { classname } = req.body;
+        console.log(classname);
+        
+        // Find the classroom
+        const classroom = await Classroom.findOne({ classroomName: classname }).populate('students');
+        if (!classroom) {
+            res.status(404).json({ message: "Classroom not found" });
+            return;
+        }
+        // Check if classroom has students
+        if (classroom.students.length === 0) {
+            res.status(404).json({ message: "No students found in this classroom" });
+            return;
+        }
+        // Get all grades of all students in the classroom
+        const grades = await Grade.find({ student: { $in: classroom.students.map(student => student._id) } });
+        if (grades.length === 0) {
+            res.status(404).json({ message: "No grades found for students in this classroom" });
+            return;
+        }
+        // Calculate the average of grades
+        const totalScore = grades.reduce((acc, grade) => acc + grade.score, 0);
+        const average = totalScore / grades.length;
+        res.status(200).json({ average });
+    } catch (err) {
+        const error = err as Error;
         res.status(500).json({ message: "Error fetching grade averages", error: error.message });
     }
-}
+  };

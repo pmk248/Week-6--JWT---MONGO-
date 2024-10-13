@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getAllGrades } from "../controllers/studentController"
+import { getAllClasses, getAllGrades } from "../controllers/studentController"
 
 const router = Router()
 
 router.get('/getGrades', getAllGrades)
+router.get('/getClasses', getAllClasses)
 
 export default router;
