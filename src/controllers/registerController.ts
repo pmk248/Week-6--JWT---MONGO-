@@ -11,14 +11,15 @@ export const teacherRegister = async (req: Request, res: Response) => {
           username,
           email,
           password,
-          role: "teacher",
-          classroom: null
+          role: "Teacher",
+          classroom: null,
+          grades: []
       });
       await teacher.save();
 
       // Create the classroom object:
       const classroom = new Classroom({
-      name: classroomName,
+      classroomName: classroomName,
       teacher: teacher._id 
       });
       await classroom.save();
@@ -37,9 +38,9 @@ export const teacherRegister = async (req: Request, res: Response) => {
 
 export const studentRegister = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, email, password, classroomId } = req.body; 
+    const { username, email, password, classroomName } = req.body; 
     // Find the classroom the student is joining
-    const classroom = await Classroom.findById(classroomId);
+    const classroom = await Classroom.findOne({ classroomName });
     if (!classroom) {
       res.status(404).json({ message: "Classroom not found" });
       return;
@@ -49,8 +50,9 @@ export const studentRegister = async (req: Request, res: Response): Promise<void
         username, 
         email, 
         password, 
-        role: "student", 
-        classroom: classroom._id 
+        role: "Student", 
+        classroom: classroom._id,
+        grades: []
     });
     await student.save();
     // Add the student to the classroom's student list

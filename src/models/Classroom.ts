@@ -1,13 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export default interface IClassroom extends Document {
-  name: string;
+export default interface Iclassroom extends Document {
+  classroomName: string;
   teacher: mongoose.Types.ObjectId; // Link to a teacher (User model)
   students: mongoose.Types.ObjectId[]; // Array of students
 }
 
-const classroomSchema = new Schema<IClassroom>({
-  name: {
+const classroomSchema = new Schema<Iclassroom>({
+  classroomName: {
     type: String,
     required: [true, "Classroom name is mandatory!"],
     unique: true,
@@ -23,4 +23,4 @@ const classroomSchema = new Schema<IClassroom>({
   }],
 }, { timestamps: true });
 
-export const Classroom = mongoose.model<IClassroom>("Classroom", classroomSchema);
+export const Classroom = mongoose.model<Iclassroom>("Classroom", classroomSchema);

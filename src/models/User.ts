@@ -5,7 +5,8 @@ export default interface Iuser extends Document {
     email       : string;
     password    : string;
     role        : "Teacher" | "Student",
-    classroom?  : mongoose.Types.ObjectId
+    classroom?  : mongoose.Types.ObjectId,
+    grades?     : mongoose.Types.ObjectId[]
 }
 
 const userSchema = new Schema<Iuser>({
@@ -31,6 +32,11 @@ const userSchema = new Schema<Iuser>({
         type   : Schema.Types.ObjectId,
         ref    : "Classroom",
         default: null
+    },
+    grades: {
+        type   : [Schema.Types.ObjectId],
+        ref    : "Grade",
+        default: []
     }
 }, { timestamps: true })
 
