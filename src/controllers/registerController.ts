@@ -14,15 +14,19 @@ export const teacherRegister = async (req: Request, res: Response) => {
           role: "teacher",
           classroom: null
       });
-      // Create the classroom and link it to the teacher:
+      await teacher.save();
+
+      // Create the classroom object:
       const classroom = new Classroom({
       name: classroomName,
       teacher: teacher._id 
       });
-      // Now assign the classroom to the teacher:
+      await classroom.save();
+
+      // Adding classroom prop to teacher:
       teacher.classroom = classroom._id as mongoose.Types.ObjectId;
-      // Save both teacher and classroom in parallel
-      await Promise.all([teacher.save(), classroom.save()]);Classroom
+      await teacher.save();
+
       res.status(201).json({ message: "Teacher registered successfully", teacher, classroom });
       } catch (err) {
       const error = err as Error;
@@ -31,24 +35,31 @@ export const teacherRegister = async (req: Request, res: Response) => {
 };
 
 
-export const studentRegister = async (req: Request, res: Response) => {
-
-  const { username, email, password, classroomId } = req.body; 
-  // Find the classroom the student is joining
-  const classroom = await Classroom.findById(classroomId);
-  if (!classroom) return res.status(404).json({ message: "Classroom not found" });
-  // Create the student
-  const student = new User({ 
-      username, 
-      email, 
-      password, 
-      role: "student", 
-      classroom: classroom._id 
-  });
-  await student.save();
-  // Add the student to the classroom's student list
-  classroom.students.push(student._id as mongoose.Types.ObjectId);
-  await classroom.save();
-
-  res.status(201).json({ message: "Student registered successfully", student });
+export const studentRegister = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username, email, password, classroomId } = req.body; 
+    // Find the classroom the student is joining
+    const classroom = await Classroom.findById(classroomId);
+    if (!classroom) {
+      res.status(404).json({ message: "Classroom not found" });
+      return;
+    }
+    // Create the student
+    const student = new User({ 
+        username, 
+        email, 
+        password, 
+        role: "student", 
+        classroom: classroom._id 
+    });
+    await student.save();
+    // Add the student to the classroom's student list
+    classroom.students.push(student._id as mongoose.Types.ObjectId);
+    await classroom.save();
+  
+    res.status(201).json({ message: "Student registered successfully", student });
+  } catch(err) {
+    const error = err as Error;
+    res.status(500).json({ message: "Error registering student", error: error.message });
+  }
 };

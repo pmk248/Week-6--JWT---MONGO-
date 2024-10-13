@@ -3,8 +3,8 @@ import { teacherRegister, studentRegister } from "../controllers/registerControl
 
 const router = Router();
 
-router.post("/register/teacher", teacherRegister)
+router.post("/teacher", teacherRegister)
 
-router.post("/register/student", studentRegister)
+router.post("/student", studentRegister)
 
 export default router;
